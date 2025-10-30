@@ -1,60 +1,75 @@
-import React, { useState } from 'react';
-import { Search, Lightbulb, FileText, TrendingUp, Target, DollarSign, Users } from 'lucide-react';
+"use client"
+
+import { useState, type FormEvent, type ChangeEvent } from "react"
+import { Search, Lightbulb, FileText, TrendingUp, Target, DollarSign, Users } from "lucide-react"
+import { Header } from "@/components/header"
+
+interface FormData {
+  nome: string
+  celular: string
+  email: string
+  empresa: string
+  cargo: string
+  auxilio: string
+}
 
 export default function DiagnosticoIA() {
-  const [formData, setFormData] = useState({
-    nome: '',
-    celular: '',
-    email: '',
-    empresa: '',
-    cargo: '',
-    auxilio: ''
-  });
+  const [formData, setFormData] = useState<FormData>({
+    nome: "",
+    celular: "",
+    email: "",
+    empresa: "",
+    cargo: "",
+    auxilio: "",
+  })
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
     // Aqui você pode integrar com seu sistema de captura de leads
     // Por exemplo: enviar para API, Google Sheets, RD Station, etc.
-    
-    console.log('Form submitted:', formData);
-    alert('Diagnóstico solicitado! Entraremos em contato em breve.');
-    
+
+    console.log("Form submitted:", formData)
+    alert("Diagnóstico solicitado! Entraremos em contato em breve.")
+
     // Limpar formulário após envio
     setFormData({
-      nome: '',
-      celular: '',
-      email: '',
-      empresa: '',
-      cargo: '',
-      auxilio: ''
-    });
-  };
+      nome: "",
+      celular: "",
+      email: "",
+      empresa: "",
+      cargo: "",
+      auxilio: "",
+    })
+  }
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+      [e.target.name]: e.target.value,
+    })
+  }
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Header Component */}
+      <Header />
+
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-50 to-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            <span className="text-red-600">90%</span> dos projetos de IA corporativa{' '}
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance">
+            <span className="text-red-600">90%</span> dos projetos de IA corporativa{" "}
             <span className="text-red-600">falham.</span>
             <br />
             <span className="text-blue-600">Descubra onde aplicar — antes de gastar.</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-            Diagnóstico gratuito e personalizado que mapeia seus processos, identifica gargalos reais 
-            e mostra onde IA gera ROI mensurável na sua operação — sem risco, sem compromisso.
+          <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto text-pretty">
+            Diagnóstico gratuito e personalizado que mapeia seus processos, identifica gargalos reais e mostra onde IA
+            gera ROI mensurável na sua operação — sem risco, sem compromisso.
           </p>
-          <a 
-            href="#formulario" 
+          <a
+            href="#formulario"
             className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl"
           >
             Quero meu diagnóstico gratuito!
@@ -67,12 +82,12 @@ export default function DiagnosticoIA() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">Pare de testar IA no escuro!</h2>
           <p className="text-lg mb-4 leading-relaxed">
-            Muitas empresas investem em inteligência artificial sem saber onde ela realmente 
-            faz diferença — e acabam gastando tempo e recursos em lugares errados.
+            Muitas empresas investem em inteligência artificial sem saber onde ela realmente faz diferença — e acabam
+            gastando tempo e recursos em lugares errados.
           </p>
           <p className="text-lg leading-relaxed">
-            Nosso diagnóstico revela os pontos certos para aplicar IA e gerar retorno real, 
-            com clareza, previsibilidade e integração total aos seus sistemas.
+            Nosso diagnóstico revela os pontos certos para aplicar IA e gerar retorno real, com clareza, previsibilidade
+            e integração total aos seus sistemas.
           </p>
         </div>
       </section>
@@ -84,9 +99,7 @@ export default function DiagnosticoIA() {
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Em <span className="text-blue-600">três</span> passos simples:
             </h2>
-            <p className="text-xl text-gray-600">
-              Você entende o potencial real da IA na sua operação.
-            </p>
+            <p className="text-xl text-gray-600">Você entende o potencial real da IA na sua operação.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -95,12 +108,9 @@ export default function DiagnosticoIA() {
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
                 <Search className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                Mapeamento de processos críticos
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Mapeamento de processos críticos</h3>
               <p className="text-gray-600 text-center leading-relaxed">
-                Identificamos os processos que consomem mais tempo, geram mais erro 
-                ou travam decisões na sua operação.
+                Identificamos os processos que consomem mais tempo, geram mais erro ou travam decisões na sua operação.
               </p>
             </div>
 
@@ -109,12 +119,10 @@ export default function DiagnosticoIA() {
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
                 <Lightbulb className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                Análise de viabilidade com IA
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Análise de viabilidade com IA</h3>
               <p className="text-gray-600 text-center leading-relaxed">
-                Avaliamos quais processos podem ser automatizados ou otimizados com IA, 
-                estimando o ROI real de cada caso de uso.
+                Avaliamos quais processos podem ser automatizados ou otimizados com IA, estimando o ROI real de cada
+                caso de uso.
               </p>
             </div>
 
@@ -123,12 +131,10 @@ export default function DiagnosticoIA() {
               <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
                 <FileText className="w-8 h-8 text-purple-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                Plano executável e priorizado
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Plano executável e priorizado</h3>
               <p className="text-gray-600 text-center leading-relaxed">
-                Você recebe um documento claro: quais processos automatizar primeiro, 
-                esforço técnico estimado, ROI esperado e próximos passos.
+                Você recebe um documento claro: quais processos automatizar primeiro, esforço técnico estimado, ROI
+                esperado e próximos passos.
               </p>
             </div>
           </div>
@@ -144,12 +150,12 @@ export default function DiagnosticoIA() {
             <span className="text-blue-600">Agora potencializada por IA.</span>
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            A BIMachine é referência em inteligência analítica corporativa há mais de 15 anos, 
-            com mais de 500 empresas transformando dados em resultados.
+            A BIMachine é referência em inteligência analítica corporativa há mais de 15 anos, com mais de 500 empresas
+            transformando dados em resultados.
           </p>
           <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto mt-4">
-            Agora, levamos essa expertise para o próximo nível: diagnóstico estratégico 
-            de onde e como aplicar IA na sua operação — com segurança, governança e ROI comprovado.
+            Agora, levamos essa expertise para o próximo nível: diagnóstico estratégico de onde e como aplicar IA na sua
+            operação — com segurança, governança e ROI comprovado.
           </p>
         </div>
       </section>
@@ -160,8 +166,7 @@ export default function DiagnosticoIA() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Onde a IA já gera resultado hoje</h2>
             <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-              Cada empresa é única, mas esses são exemplos reais de onde IA tem gerado 
-              ROI em operações como a sua:
+              Cada empresa é única, mas esses são exemplos reais de onde IA tem gerado ROI em operações como a sua:
             </p>
           </div>
 
@@ -196,8 +201,8 @@ export default function DiagnosticoIA() {
           </div>
 
           <p className="text-center text-gray-300 text-lg">
-            No seu diagnóstico, vamos identificar os casos específicos da sua operação — 
-            com base nos seus dados, processos e metas.
+            No seu diagnóstico, vamos identificar os casos específicos da sua operação — com base nos seus dados,
+            processos e metas.
           </p>
           <p className="text-center text-gray-400 mt-4">
             Tudo conectado aos sistemas que você já usa, com segurança e governança.
@@ -209,21 +214,21 @@ export default function DiagnosticoIA() {
       <section id="formulario" className="py-20 px-4 bg-gradient-to-br from-blue-50 to-white">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Pare de apostar. Comece a ter certeza.
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Pare de apostar. Comece a ter certeza.</h2>
             <p className="text-xl text-gray-600">
-              Preencha o formulário e receba seu diagnóstico personalizado — 
-              100% gratuito, sem compromisso.
+              Preencha o formulário e receba seu diagnóstico personalizado — 100% gratuito, sem compromisso.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-xl">
+          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-xl">
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">Nome*</label>
+                <label htmlFor="nome" className="block text-gray-700 font-semibold mb-2">
+                  Nome*
+                </label>
                 <input
                   type="text"
+                  id="nome"
                   name="nome"
                   value={formData.nome}
                   onChange={handleChange}
@@ -234,9 +239,12 @@ export default function DiagnosticoIA() {
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">Celular*</label>
+                <label htmlFor="celular" className="block text-gray-700 font-semibold mb-2">
+                  Celular*
+                </label>
                 <input
                   type="tel"
+                  id="celular"
                   name="celular"
                   value={formData.celular}
                   onChange={handleChange}
@@ -249,9 +257,12 @@ export default function DiagnosticoIA() {
 
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">Email*</label>
+                <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">
+                  Email*
+                </label>
                 <input
                   type="email"
+                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
@@ -262,9 +273,12 @@ export default function DiagnosticoIA() {
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">Empresa*</label>
+                <label htmlFor="empresa" className="block text-gray-700 font-semibold mb-2">
+                  Empresa*
+                </label>
                 <input
                   type="text"
+                  id="empresa"
                   name="empresa"
                   value={formData.empresa}
                   onChange={handleChange}
@@ -277,8 +291,11 @@ export default function DiagnosticoIA() {
 
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">Cargo*</label>
+                <label htmlFor="cargo" className="block text-gray-700 font-semibold mb-2">
+                  Cargo*
+                </label>
                 <select
+                  id="cargo"
                   name="cargo"
                   value={formData.cargo}
                   onChange={handleChange}
@@ -295,10 +312,11 @@ export default function DiagnosticoIA() {
               </div>
 
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">
+                <label htmlFor="auxilio" className="block text-gray-700 font-semibold mb-2">
                   De que forma podemos auxiliar você?*
                 </label>
                 <select
+                  id="auxilio"
                   name="auxilio"
                   value={formData.auxilio}
                   onChange={handleChange}
@@ -315,8 +333,8 @@ export default function DiagnosticoIA() {
             </div>
 
             <button
-              onClick={handleSubmit}
-              className="w-full bg-blue-600 text-white py-4 rounded-lg text-lg font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl cursor-pointer"
+              type="submit"
+              className="w-full bg-blue-600 text-white py-4 rounded-lg text-lg font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl"
             >
               QUERO PARTICIPAR!
             </button>
@@ -328,7 +346,7 @@ export default function DiagnosticoIA() {
                 <span>✓ 100% personalizado</span>
               </p>
             </div>
-          </div>
+          </form>
         </div>
       </section>
 
@@ -336,11 +354,9 @@ export default function DiagnosticoIA() {
       <footer className="bg-gray-900 text-gray-400 py-8 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="mb-2">© 2025 BIMachine - Todos os direitos reservados</p>
-          <p className="text-sm">
-            Inteligência Analítica e IA Corporativa
-          </p>
+          <p className="text-sm">Inteligência Analítica e IA Corporativa</p>
         </div>
       </footer>
     </div>
-  );
+  )
 }

@@ -3,10 +3,10 @@
 Landing page para captura de leads interessados no diagnóstico gratuito de IA.
 
 ## Como rodar localmente
-```bash
+\`\`\`bash
 npm install
 npm run dev
-```
+\`\`\`
 
 Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
