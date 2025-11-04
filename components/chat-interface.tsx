@@ -42,6 +42,7 @@ export function ChatInterface() {
   })
   const [isTyping, setIsTyping] = useState(false)
   const [showingMessageIndex, setShowingMessageIndex] = useState(-1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
@@ -178,17 +179,47 @@ export function ChatInterface() {
     }, 1300)
   }
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    console.log("Form submitted:", formData)
+    setIsSubmitting(true)
 
-    addUserMessage(`${formData.nome} - ${formData.empresa}`)
-    setStep("success")
-    addBotMessage(
-      "Pronto! Tudo certo por aqui! ✅\n\nRecebemos suas informações e nossa equipe já está preparando seu diagnóstico personalizado.\n\n📞 Você receberá nosso contato em até 15 minutos\n\nEnquanto aguarda, que tal conhecer um pouco mais sobre nossas soluções?",
-      1500,
-    )
+    try {
+      // Faz o POST para a API com todos os dados coletados
+      const response = await fetch("/api/submit-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || "Erro ao enviar dados")
+      }
+
+      console.log("[v0] Formulário enviado com sucesso:", result)
+
+      // Mostra mensagem do usuário e avança para sucesso
+      addUserMessage(`${formData.nome} - ${formData.empresa}`)
+      setStep("success")
+      addBotMessage(
+        "Pronto! Tudo certo por aqui! ✅\n\nRecebemos suas informações e nossa equipe já está preparando seu diagnóstico personalizado.\n\n📞 Você receberá nosso contato em até 15 minutos\n\nEnquanto aguarda, que tal conhecer um pouco mais sobre nossas soluções?",
+        1500,
+      )
+    } catch (error) {
+      console.error("[v0] Erro ao enviar formulário:", error)
+
+      // Mostra mensagem de erro para o usuário
+      addBotMessage(
+        "Ops! Tivemos um problema ao enviar seus dados. 😔\n\nPor favor, tente novamente ou entre em contato diretamente pelo WhatsApp: (00) 00000-0000",
+        500,
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -396,16 +427,16 @@ export function ChatInterface() {
           )}
 
           {step === "form" && !isTyping && (
-            <form onSubmit={handleFormSubmit} className="space-y-4 sm:space-y-5 animate-fade-in">
-              <div className="text-center mb-4 sm:mb-6">
-                <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-800">
-                  📋 Seus dados para contato rápido
+            <form onSubmit={handleFormSubmit} className="space-y-3 sm:space-y-4 animate-fade-in">
+              <div className="text-center mb-3 sm:mb-4">
+                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 leading-snug">
+                  Preciso de mais algumas informações para nossa equipe atender você
                 </h3>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 md:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 <div className="sm:col-span-2">
-                  <label htmlFor="nome" className="block text-sm font-bold text-gray-700 mb-2">
+                  <label htmlFor="nome" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     Nome completo*
                   </label>
                   <input
@@ -415,13 +446,13 @@ export function ChatInterface() {
                     value={formData.nome}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3.5 py-3 sm:px-4 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base font-medium shadow-sm hover:border-gray-300"
+                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
                     placeholder="Seu nome completo"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     E-mail corporativo*
                   </label>
                   <input
@@ -431,13 +462,13 @@ export function ChatInterface() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3.5 py-3 sm:px-4 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base font-medium shadow-sm hover:border-gray-300"
+                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
                     placeholder="seu@empresa.com"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="celular" className="block text-sm font-bold text-gray-700 mb-2">
+                  <label htmlFor="celular" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     Celular/WhatsApp*
                   </label>
                   <input
@@ -447,13 +478,13 @@ export function ChatInterface() {
                     value={formData.celular}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3.5 py-3 sm:px-4 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base font-medium shadow-sm hover:border-gray-300"
+                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
                     placeholder="(00) 00000-0000"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="empresa" className="block text-sm font-bold text-gray-700 mb-2">
+                  <label htmlFor="empresa" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     Empresa*
                   </label>
                   <input
@@ -463,13 +494,13 @@ export function ChatInterface() {
                     value={formData.empresa}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3.5 py-3 sm:px-4 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base font-medium shadow-sm hover:border-gray-300"
+                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
                     placeholder="Nome da empresa"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="cargo" className="block text-sm font-bold text-gray-700 mb-2">
+                  <label htmlFor="cargo" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     Seu cargo/função*
                   </label>
                   <select
@@ -478,7 +509,7 @@ export function ChatInterface() {
                     value={formData.cargo}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3.5 py-3 sm:px-4 sm:py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm sm:text-base font-medium shadow-sm hover:border-gray-300 bg-white"
+                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
                   >
                     <option value="">Selecione...</option>
                     <option value="diretor">Diretor(a)</option>
@@ -493,9 +524,10 @@ export function ChatInterface() {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-5 py-4 sm:px-6 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 mt-2"
               >
-                Quero Falar com um Especialista Agora! 🚀
+                {isSubmitting ? "Enviando... ⏳" : "Quero Falar com um Especialista Agora! 🚀"}
               </button>
             </form>
           )}
