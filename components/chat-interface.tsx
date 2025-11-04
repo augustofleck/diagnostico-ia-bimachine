@@ -45,7 +45,7 @@ export function ChatInterface() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
-  const hiddenFormRef = useRef<HTMLFormElement>(null)
+  const mainFormRef = useRef<HTMLFormElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -181,82 +181,23 @@ export function ChatInterface() {
   }
 
   const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    console.log("[v0] Form submit interceptado - permitindo submissão tradicional para tracking")
 
     setIsSubmitting(true)
 
-    console.log("[v0] Iniciando submissão do formulário...")
+    // Não previne o comportamento padrão - deixa o form submeter naturalmente
+    // O form vai submeter para o iframe, permitindo que o script de tracking capture
 
-    try {
-      console.log("[v0] Submetendo form tradicional para tracking...")
-      if (hiddenFormRef.current) {
-        const hiddenForm = hiddenFormRef.current
-        ;(hiddenForm.elements.namedItem("nome") as HTMLInputElement).value = formData.nome
-        ;(hiddenForm.elements.namedItem("email") as HTMLInputElement).value = formData.email
-        ;(hiddenForm.elements.namedItem("celular") as HTMLInputElement).value = formData.celular
-        ;(hiddenForm.elements.namedItem("empresa") as HTMLInputElement).value = formData.empresa
-        ;(hiddenForm.elements.namedItem("cargo") as HTMLInputElement).value = formData.cargo
-        ;(hiddenForm.elements.namedItem("faturamento") as HTMLInputElement).value = formData.faturamento
-        ;(hiddenForm.elements.namedItem("iniciativasIA") as HTMLInputElement).value = formData.iniciativasIA
-        ;(hiddenForm.elements.namedItem("bi") as HTMLInputElement).value = formData.bi
-
-        hiddenForm.submit()
-        console.log("[v0] Form tradicional submetido para tracking")
-      }
-
-      console.log("[v0] Enviando dados via fetch...")
-      const response = await fetch("/api/submit-form", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        throw new Error(result.message || "Erro ao enviar dados")
-      }
-
-      console.log("[v0] Formulário enviado com sucesso:", result)
-
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(
-          new CustomEvent("formSubmitted", {
-            detail: {
-              formId: "diagnostico-ia-form",
-              formData: formData,
-              timestamp: new Date().toISOString(),
-            },
-          }),
-        )
-
-        if ((window as any).dataLayer) {
-          ;(window as any).dataLayer.push({
-            event: "form_submission",
-            form_id: "diagnostico-ia-form",
-            form_name: "Diagnóstico IA BIMachine",
-          })
-        }
-      }
-
+    // Aguarda um pouco para garantir que o tracking capturou
+    setTimeout(() => {
       addUserMessage(`${formData.nome} - ${formData.empresa}`)
       setStep("success")
       addBotMessage(
         "Pronto! Tudo certo por aqui! ✅\n\nRecebemos suas informações e nossa equipe já está preparando seu diagnóstico personalizado.\n\n📞 Você receberá nosso contato em até 15 minutos\n\nEnquanto aguarda, que tal conhecer um pouco mais sobre nossas soluções?",
         1500,
       )
-    } catch (error) {
-      console.error("[v0] Erro ao enviar formulário:", error)
-
-      addBotMessage(
-        "Ops! Tivemos um problema ao enviar seus dados. 😔\n\nPor favor, tente novamente ou entre em contato diretamente pelo WhatsApp: (00) 00000-0000",
-        500,
-      )
-    } finally {
       setIsSubmitting(false)
-    }
+    }, 1000)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -268,26 +209,8 @@ export function ChatInterface() {
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 lg:py-12 min-h-screen flex items-center">
-      <iframe name="hidden-form-target" style={{ display: "none" }} title="Form submission target" />
-      <form
-        ref={hiddenFormRef}
-        action="/api/submit-form"
-        method="POST"
-        target="hidden-form-target"
-        style={{ display: "none" }}
-        id="diagnostico-ia-form-hidden"
-        data-form-name="Diagnóstico IA BIMachine"
-        data-form-type="lead-capture"
-      >
-        <input type="text" name="nome" />
-        <input type="email" name="email" />
-        <input type="tel" name="celular" />
-        <input type="text" name="empresa" />
-        <input type="text" name="cargo" />
-        <input type="hidden" name="faturamento" />
-        <input type="hidden" name="iniciativasIA" />
-        <input type="hidden" name="bi" />
-      </form>
+      <iframe name="form-target-iframe" style={{ display: "none" }} title="Form submission target" />
+
       <div className="w-full bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden min-h-[600px] sm:min-h-[700px] flex flex-col border border-white/20">
         <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white p-3 sm:p-4 md:p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10" />
@@ -485,7 +408,11 @@ export function ChatInterface() {
 
           {step === "form" && !isTyping && (
             <form
+              ref={mainFormRef}
               onSubmit={handleFormSubmit}
+              action="/api/submit-form"
+              method="POST"
+              target="form-target-iframe"
               className="space-y-3 sm:space-y-4 animate-fade-in"
               id="diagnostico-ia-form"
               data-form-name="Diagnóstico IA BIMachine"
@@ -496,6 +423,10 @@ export function ChatInterface() {
                   Preciso de mais algumas informações para nossa equipe atender você
                 </h3>
               </div>
+
+              <input type="hidden" name="faturamento" value={formData.faturamento} />
+              <input type="hidden" name="iniciativasIA" value={formData.iniciativasIA} />
+              <input type="hidden" name="bi" value={formData.bi} />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 <div className="sm:col-span-2">
