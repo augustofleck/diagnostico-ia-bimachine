@@ -119,29 +119,19 @@ export function ChatInterface() {
 
     if (answer === "sim") {
       addBotMessage(
-        "Ótimo! Empresas nesse porte costumam ter processos estruturados onde IA gera grande impacto.\n\nPróxima pergunta... ⏭️",
-        1500,
+        "Ótimo! Empresas nesse porte costumam ter processos estruturados onde IA gera grande impacto. 😊\n\nAgora me conta: sua empresa já tem alguma iniciativa de Inteligência Artificial em andamento?\n\n(Pode ser piloto, testes, ferramentas com IA, chatbots, etc.)",
+        1200,
       )
-      setTimeout(() => {
-        setStep("question2")
-        addBotMessage(
-          "Segunda pergunta:\n\nSua empresa já tem alguma iniciativa de Inteligência Artificial em andamento?\n\n(Pode ser piloto, testes, ferramentas com IA, chatbots, etc.)",
-          3000,
-        )
-      }, 2000)
     } else {
       addBotMessage(
-        "Entendi! Vamos focar em casos de uso com ROI mais rápido e implementação simplificada.\n\nPróxima pergunta... ⏭️",
-        1500,
+        "Entendi! Vamos focar em casos de uso com ROI mais rápido e implementação simplificada. 😊\n\nAgora me conta: sua empresa já tem alguma iniciativa de Inteligência Artificial em andamento?\n\n(Pode ser piloto, testes, ferramentas com IA, chatbots, etc.)",
+        1200,
       )
-      setTimeout(() => {
-        setStep("question2")
-        addBotMessage(
-          "Segunda pergunta:\n\nSua empresa já tem alguma iniciativa de Inteligência Artificial em andamento?\n\n(Pode ser piloto, testes, ferramentas com IA, chatbots, etc.)",
-          3000,
-        )
-      }, 2000)
     }
+
+    setTimeout(() => {
+      setStep("question2")
+    }, 1300)
   }
 
   const handleQuestion2Answer = (answer: "sim" | "nao") => {
@@ -151,23 +141,19 @@ export function ChatInterface() {
 
     if (answer === "sim") {
       addBotMessage(
-        "Que bom! Então você já entende o potencial da IA. Vamos identificar como ampliar e otimizar essas iniciativas.\n\nÚltima pergunta... ⏭️",
-        1500,
+        "Que bom! Então você já entende o potencial da IA. Vamos identificar como ampliar e otimizar essas iniciativas. 🚀\n\nÚltima pergunta: sua empresa já tem uma ferramenta de BI ou Analytics implementada?\n\n(Dashboards, relatórios automatizados, plataformas de dados, etc.)",
+        1200,
       )
     } else {
       addBotMessage(
-        "Perfeito! Você está no momento certo para começar do jeito certo — com planejamento estratégico.\n\nÚltima pergunta... ⏭️",
-        1500,
+        "Perfeito! Você está no momento certo para começar do jeito certo — com planejamento estratégico. 🎯\n\nÚltima pergunta: sua empresa já tem uma ferramenta de BI ou Analytics implementada?\n\n(Dashboards, relatórios automatizados, plataformas de dados, etc.)",
+        1200,
       )
     }
 
     setTimeout(() => {
       setStep("question3")
-      addBotMessage(
-        "Última pergunta (prometo! 😊):\n\nSua empresa já tem uma ferramenta de BI ou Analytics implementada?\n\n(Dashboards, relatórios automatizados, plataformas de dados, etc.)",
-        3000,
-      )
-    }, 2000)
+    }, 1300)
   }
 
   const handleQuestion3Answer = (answer: "sim" | "nao") => {
@@ -177,23 +163,19 @@ export function ChatInterface() {
 
     if (answer === "sim") {
       addBotMessage(
-        "Excelente! Ter dados estruturados é a base perfeita para aplicar IA com assertividade. Você já está um passo à frente.\n\nAgora vamos para o seu diagnóstico... ⏭️",
-        1500,
+        "Excelente! Ter dados estruturados é a base perfeita para aplicar IA com assertividade. Você já está um passo à frente. ✨\n\nCom essas informações, já consigo te encaminhar para um especialista direcionado para o seu cenário.\n\nAgora preciso apenas dos seus dados de contato para que nossa equipe entre em contato com você:",
+        1200,
       )
     } else {
       addBotMessage(
-        "Entendi! Isso significa que há uma oportunidade ainda maior — podemos estruturar dados E aplicar IA de forma integrada.\n\nAgora vamos para o seu diagnóstico... ⏭️",
-        1500,
+        "Entendi! Isso significa que há uma oportunidade ainda maior — podemos estruturar dados E aplicar IA de forma integrada. 💡\n\nCom essas informações, já consigo te encaminhar para um especialista direcionado para o seu cenário.\n\nAgora preciso apenas dos seus dados de contato para que nossa equipe entre em contato com você:",
+        1200,
       )
     }
 
     setTimeout(() => {
       setStep("form")
-      addBotMessage(
-        "Com essas informações, já consigo te encaminhar para um especialista direcionado para o seu cenário.\n\nAgora preciso apenas dos seus dados de contato para que nossa equipe entre em contato com você.",
-        3000,
-      )
-    }, 2000)
+    }, 1300)
   }
 
   const handleFormSubmit = (e: React.FormEvent) => {
