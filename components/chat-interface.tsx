@@ -180,20 +180,39 @@ export function ChatInterface() {
   }
 
   const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault() // Prevent the default form submission behavior
+    e.preventDefault()
+
+    console.log("[v0] Iniciando submissão do formulário")
+    console.log("[v0] Valores do formData:", formData)
 
     if (mainFormRef.current) {
       const hiddenInputs = mainFormRef.current.querySelectorAll('input[type="hidden"]')
       hiddenInputs.forEach((input) => {
         const htmlInput = input as HTMLInputElement
-        if (htmlInput.name === "cf_faturamento_superior_200k") {
+        if (htmlInput.name === "c_faturamento") {
           htmlInput.value = formData.faturamento
-        } else if (htmlInput.name === "cf_tem_iniciativas_ia") {
+          console.log("[v0] Definindo c_faturamento:", formData.faturamento)
+        } else if (htmlInput.name === "c_iniciativas_ia") {
           htmlInput.value = formData.iniciativasIA
-        } else if (htmlInput.name === "cf_tem_bi_analytics") {
+          console.log("[v0] Definindo c_iniciativas_ia:", formData.iniciativasIA)
+        } else if (htmlInput.name === "c_bi_analytics") {
           htmlInput.value = formData.bi
+          console.log("[v0] Definindo c_bi_analytics:", formData.bi)
+        } else if (htmlInput.name === "c_diagnostico_completo") {
+          const diagnostico = `Faturamento >200k: ${formData.faturamento === "sim" ? "Sim" : "Não"} | Iniciativas IA: ${formData.iniciativasIA === "sim" ? "Sim" : "Não"} | BI/Analytics: ${formData.bi === "sim" ? "Sim" : "Não"}`
+          htmlInput.value = diagnostico
+          console.log("[v0] Definindo c_diagnostico_completo:", diagnostico)
         }
       })
+
+      const formDataObj = new FormData(mainFormRef.current)
+      console.log("[v0] Dados que serão enviados:")
+      formDataObj.forEach((value, key) => {
+        console.log(`  ${key}: ${value}`)
+      })
+
+      console.log("[v0] Submetendo form para o iframe...")
+      mainFormRef.current.submit()
     }
 
     setIsSubmitting(true)
@@ -202,11 +221,11 @@ export function ChatInterface() {
       addUserMessage(`${formData.nome} - ${formData.empresa}`)
       setStep("success")
       addBotMessage(
-        "Pronto! Tudo certo por aqui! ✅\n\nRecebemos suas informações e nossa equipe já está preparando seu diagnóstico personalizado.\n\n📞 Você receberá nosso contato em até 15 minutos\n\nEnquanto aguarda, que tal conhecer um pouco mais sobre nossas soluções?",
+        "Pronto! Tudo certo por aqui!\n\nRecebemos suas informações e nossa equipe já está preparando seu diagnóstico personalizado.\n\nVocê receberá nosso contato em até 15 minutos\n\nEnquanto aguarda, que tal conhecer um pouco mais sobre nossas soluções?",
         1500,
       )
       setIsSubmitting(false)
-    }, 3000)
+    }, 2000)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -365,9 +384,17 @@ export function ChatInterface() {
               </h3>
             </div>
 
-            <input type="hidden" name="cf_faturamento_superior_200k" value={formData.faturamento} />
-            <input type="hidden" name="cf_tem_iniciativas_ia" value={formData.iniciativasIA} />
-            <input type="hidden" name="cf_tem_bi_analytics" value={formData.bi} />
+            <input type="hidden" name="traffic_source" value="Diagnostico IA" />
+            <input type="hidden" name="identificador" value="Diagnostico IA" />
+
+            <input type="hidden" name="c_faturamento" value={formData.faturamento} />
+            <input type="hidden" name="c_iniciativas_ia" value={formData.iniciativasIA} />
+            <input type="hidden" name="c_bi_analytics" value={formData.bi} />
+            <input
+              type="hidden"
+              name="c_diagnostico_completo"
+              value={`Faturamento >200k: ${formData.faturamento === "sim" ? "Sim" : "Não"} | Iniciativas IA: ${formData.iniciativasIA === "sim" ? "Sim" : "Não"} | BI/Analytics: ${formData.bi === "sim" ? "Sim" : "Não"}`}
+            />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
               <div className="sm:col-span-2">
