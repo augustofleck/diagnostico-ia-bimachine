@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
+import Script from "next/script"
 import "./globals.css"
 
 import { Inter } from "next/font/google"
@@ -42,6 +43,10 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         {children}
         <Analytics />
+        <Script
+          src="https://d335luupugsy2.cloudfront.net/js/loader-scripts/307950ac-65fa-4ff2-a638-0fb53d62dea2-loader.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   )
