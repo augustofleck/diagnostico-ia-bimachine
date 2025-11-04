@@ -185,7 +185,6 @@ export function ChatInterface() {
     setIsSubmitting(true)
 
     try {
-      // Faz o POST para a API com todos os dados coletados
       const response = await fetch("/api/submit-form", {
         method: "POST",
         headers: {
@@ -201,6 +200,28 @@ export function ChatInterface() {
       }
 
       console.log("[v0] Formulário enviado com sucesso:", result)
+
+      if (typeof window !== "undefined") {
+        // Evento genérico de conversão
+        window.dispatchEvent(
+          new CustomEvent("formSubmitted", {
+            detail: {
+              formId: "diagnostico-ia-form",
+              formData: formData,
+              timestamp: new Date().toISOString(),
+            },
+          }),
+        )
+
+        // Tenta notificar scripts de tracking comuns
+        if ((window as any).dataLayer) {
+          ;(window as any).dataLayer.push({
+            event: "form_submission",
+            form_id: "diagnostico-ia-form",
+            form_name: "Diagnóstico IA BIMachine",
+          })
+        }
+      }
 
       // Mostra mensagem do usuário e avança para sucesso
       addUserMessage(`${formData.nome} - ${formData.empresa}`)
@@ -427,7 +448,13 @@ export function ChatInterface() {
           )}
 
           {step === "form" && !isTyping && (
-            <form onSubmit={handleFormSubmit} className="space-y-3 sm:space-y-4 animate-fade-in">
+            <form
+              onSubmit={handleFormSubmit}
+              className="space-y-3 sm:space-y-4 animate-fade-in"
+              id="diagnostico-ia-form"
+              data-form-name="Diagnóstico IA BIMachine"
+              data-form-type="lead-capture"
+            >
               <div className="text-center mb-3 sm:mb-4">
                 <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 leading-snug">
                   Preciso de mais algumas informações para nossa equipe atender você
@@ -525,7 +552,7 @@ export function ChatInterface() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 mt-2"
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base md:text-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 mt-2"
               >
                 {isSubmitting ? "Enviando... ⏳" : "Quero Falar com um Especialista Agora! 🚀"}
               </button>
