@@ -4,9 +4,18 @@ import { Geist } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import "./globals.css"
 
+import { Inter } from "next/font/google"
+
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
+})
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -29,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={geist.variable}>
+    <html lang="pt-BR" className={inter.variable}>
       <body className="font-sans antialiased">
         {children}
         <Analytics />
