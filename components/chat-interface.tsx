@@ -181,14 +181,8 @@ export function ChatInterface() {
   }
 
   const handleFormSubmit = async (e: React.FormEvent) => {
-    console.log("[v0] Form submit interceptado - permitindo submissão tradicional para tracking")
-
     setIsSubmitting(true)
 
-    // Não previne o comportamento padrão - deixa o form submeter naturalmente
-    // O form vai submeter para o iframe, permitindo que o script de tracking capture
-
-    // Aguarda um pouco para garantir que o tracking capturou
     setTimeout(() => {
       addUserMessage(`${formData.nome} - ${formData.empresa}`)
       setStep("success")
@@ -197,7 +191,7 @@ export function ChatInterface() {
         1500,
       )
       setIsSubmitting(false)
-    }, 1000)
+    }, 3000)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -417,6 +411,7 @@ export function ChatInterface() {
               id="diagnostico-ia-form"
               data-form-name="Diagnóstico IA BIMachine"
               data-form-type="lead-capture"
+              data-rd-form="true"
             >
               <div className="text-center mb-3 sm:mb-4">
                 <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 leading-snug">
@@ -430,12 +425,12 @@ export function ChatInterface() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 <div className="sm:col-span-2">
-                  <label htmlFor="nome" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  <label htmlFor="nome-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     Nome completo*
                   </label>
                   <input
                     type="text"
-                    id="nome"
+                    id="nome-input"
                     name="nome"
                     value={formData.nome}
                     onChange={handleInputChange}
@@ -446,12 +441,12 @@ export function ChatInterface() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  <label htmlFor="email-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     E-mail corporativo*
                   </label>
                   <input
                     type="email"
-                    id="email"
+                    id="email-input"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
@@ -462,12 +457,15 @@ export function ChatInterface() {
                 </div>
 
                 <div>
-                  <label htmlFor="celular" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  <label
+                    htmlFor="celular-input"
+                    className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5"
+                  >
                     Celular/WhatsApp*
                   </label>
                   <input
                     type="tel"
-                    id="celular"
+                    id="celular-input"
                     name="celular"
                     value={formData.celular}
                     onChange={handleInputChange}
@@ -478,12 +476,15 @@ export function ChatInterface() {
                 </div>
 
                 <div>
-                  <label htmlFor="empresa" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  <label
+                    htmlFor="empresa-input"
+                    className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5"
+                  >
                     Empresa*
                   </label>
                   <input
                     type="text"
-                    id="empresa"
+                    id="empresa-input"
                     name="empresa"
                     value={formData.empresa}
                     onChange={handleInputChange}
@@ -494,11 +495,11 @@ export function ChatInterface() {
                 </div>
 
                 <div>
-                  <label htmlFor="cargo" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  <label htmlFor="cargo-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
                     Seu cargo/função*
                   </label>
                   <select
-                    id="cargo"
+                    id="cargo-input"
                     name="cargo"
                     value={formData.cargo}
                     onChange={handleInputChange}
