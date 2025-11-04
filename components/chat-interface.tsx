@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect, useRef } from "react"
 import { User, Check, CheckCheck, ExternalLink } from "lucide-react"
 import Image from "next/image"
@@ -181,6 +180,22 @@ export function ChatInterface() {
   }
 
   const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault() // Prevent the default form submission behavior
+
+    if (mainFormRef.current) {
+      const hiddenInputs = mainFormRef.current.querySelectorAll('input[type="hidden"]')
+      hiddenInputs.forEach((input) => {
+        const htmlInput = input as HTMLInputElement
+        if (htmlInput.name === "cf_faturamento_superior_200k") {
+          htmlInput.value = formData.faturamento
+        } else if (htmlInput.name === "cf_tem_iniciativas_ia") {
+          htmlInput.value = formData.iniciativasIA
+        } else if (htmlInput.name === "cf_tem_bi_analytics") {
+          htmlInput.value = formData.bi
+        }
+      })
+    }
+
     setIsSubmitting(true)
 
     setTimeout(() => {
@@ -205,7 +220,7 @@ export function ChatInterface() {
     <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 lg:py-12 min-h-screen flex items-center">
       <iframe name="form-target-iframe" style={{ display: "none" }} title="Form submission target" />
 
-      <div className="w-full bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden min-h-[600px] sm:min-h-[700px] flex flex-col border border-white/20">
+      <div className="w-full bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden min-h-[600px] sm:min-h-[700px] flex flex-col">
         <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white p-3 sm:p-4 md:p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10" />
           <div className="relative flex items-center justify-between gap-2">
@@ -219,7 +234,7 @@ export function ChatInterface() {
               <div className="min-w-0">
                 <h2 className="text-base sm:text-lg md:text-xl font-bold tracking-tight truncate">ADA.IA</h2>
                 <p className="text-xs sm:text-sm text-blue-100 font-medium truncate">
-                  Especialista em IA e Analyics • Online
+                  Especialista em IA e Analytics • Online
                 </p>
               </div>
             </div>
@@ -331,7 +346,126 @@ export function ChatInterface() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="border-t border-gray-200 p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-b from-white to-gray-50">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8 bg-white">
+          <form
+            ref={mainFormRef}
+            onSubmit={handleFormSubmit}
+            action="/api/submit-form"
+            method="POST"
+            target="form-target-iframe"
+            className={`space-y-3 sm:space-y-4 ${step === "form" && !isTyping ? "animate-fade-in" : "hidden"}`}
+            id="diagnostico-ia-form"
+            data-form-name="Diagnóstico IA BIMachine"
+            data-form-type="lead-capture"
+            data-rd-form="true"
+          >
+            <div className="text-center mb-3 sm:mb-4">
+              <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 leading-snug">
+                Preciso de mais algumas informações para nossa equipe atender você
+              </h3>
+            </div>
+
+            <input type="hidden" name="cf_faturamento_superior_200k" value={formData.faturamento} />
+            <input type="hidden" name="cf_tem_iniciativas_ia" value={formData.iniciativasIA} />
+            <input type="hidden" name="cf_tem_bi_analytics" value={formData.bi} />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+              <div className="sm:col-span-2">
+                <label htmlFor="nome-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  Nome completo*
+                </label>
+                <input
+                  type="text"
+                  id="nome-input"
+                  name="nome"
+                  value={formData.nome}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  placeholder="Seu nome completo"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  E-mail corporativo*
+                </label>
+                <input
+                  type="email"
+                  id="email-input"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  placeholder="seu@empresa.com"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="celular-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  Celular/WhatsApp*
+                </label>
+                <input
+                  type="tel"
+                  id="celular-input"
+                  name="celular"
+                  value={formData.celular}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  placeholder="(00) 00000-0000"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="empresa-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  Empresa*
+                </label>
+                <input
+                  type="text"
+                  id="empresa-input"
+                  name="empresa"
+                  value={formData.empresa}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  placeholder="Nome da empresa"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="cargo-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                  Seu cargo/função*
+                </label>
+                <select
+                  id="cargo-input"
+                  name="cargo"
+                  value={formData.cargo}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                >
+                  <option value="">Selecione...</option>
+                  <option value="diretor">Diretor(a)</option>
+                  <option value="gerente">Gerente</option>
+                  <option value="coordenador">Coordenador(a)</option>
+                  <option value="analista">Analista</option>
+                  <option value="socio">Sócio/Proprietário(a)</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base md:text-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 mt-2"
+            >
+              {isSubmitting ? "Enviando... ⏳" : "Quero Falar com um Especialista Agora! 🚀"}
+            </button>
+          </form>
+
           {step === "start" && !isTyping && (
             <div className="space-y-3 animate-fade-in">
               <button
@@ -398,133 +532,6 @@ export function ChatInterface() {
                 </button>
               </div>
             </div>
-          )}
-
-          {step === "form" && !isTyping && (
-            <form
-              ref={mainFormRef}
-              onSubmit={handleFormSubmit}
-              action="/api/submit-form"
-              method="POST"
-              target="form-target-iframe"
-              className="space-y-3 sm:space-y-4 animate-fade-in"
-              id="diagnostico-ia-form"
-              data-form-name="Diagnóstico IA BIMachine"
-              data-form-type="lead-capture"
-              data-rd-form="true"
-            >
-              <div className="text-center mb-3 sm:mb-4">
-                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 leading-snug">
-                  Preciso de mais algumas informações para nossa equipe atender você
-                </h3>
-              </div>
-
-              <input type="hidden" name="faturamento" value={formData.faturamento} />
-              <input type="hidden" name="iniciativasIA" value={formData.iniciativasIA} />
-              <input type="hidden" name="bi" value={formData.bi} />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-                <div className="sm:col-span-2">
-                  <label htmlFor="nome-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
-                    Nome completo*
-                  </label>
-                  <input
-                    type="text"
-                    id="nome-input"
-                    name="nome"
-                    value={formData.nome}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
-                    placeholder="Seu nome completo"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
-                    E-mail corporativo*
-                  </label>
-                  <input
-                    type="email"
-                    id="email-input"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
-                    placeholder="seu@empresa.com"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="celular-input"
-                    className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5"
-                  >
-                    Celular/WhatsApp*
-                  </label>
-                  <input
-                    type="tel"
-                    id="celular-input"
-                    name="celular"
-                    value={formData.celular}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
-                    placeholder="(00) 00000-0000"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="empresa-input"
-                    className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5"
-                  >
-                    Empresa*
-                  </label>
-                  <input
-                    type="text"
-                    id="empresa-input"
-                    name="empresa"
-                    value={formData.empresa}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
-                    placeholder="Nome da empresa"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="cargo-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
-                    Seu cargo/função*
-                  </label>
-                  <select
-                    id="cargo-input"
-                    name="cargo"
-                    value={formData.cargo}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
-                  >
-                    <option value="">Selecione...</option>
-                    <option value="diretor">Diretor(a)</option>
-                    <option value="gerente">Gerente</option>
-                    <option value="coordenador">Coordenador(a)</option>
-                    <option value="analista">Analista</option>
-                    <option value="socio">Sócio/Proprietário(a)</option>
-                    <option value="outro">Outro</option>
-                  </select>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base md:text-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 mt-2"
-              >
-                {isSubmitting ? "Enviando... ⏳" : "Quero Falar com um Especialista Agora! 🚀"}
-              </button>
-            </form>
           )}
 
           {step === "success" && !isTyping && (
