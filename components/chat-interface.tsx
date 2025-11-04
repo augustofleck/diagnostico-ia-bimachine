@@ -546,7 +546,7 @@ export function ChatInterface() {
                   href="https://www.bimachine.com.br"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation"
+                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation"
                 >
                   Nosso Site
                   <ExternalLink className="w-4 h-4" />
@@ -555,9 +555,9 @@ export function ChatInterface() {
                   href="https://register.bimachine.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation"
+                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation"
                 >
-                  Solução Analytics
+                  Teste nossa solução analytics grátis
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
