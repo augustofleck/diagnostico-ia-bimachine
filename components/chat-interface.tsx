@@ -45,6 +45,7 @@ export function ChatInterface() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
+  const hiddenFormRef = useRef<HTMLFormElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -184,7 +185,26 @@ export function ChatInterface() {
 
     setIsSubmitting(true)
 
+    console.log("[v0] Iniciando submissão do formulário...")
+
     try {
+      console.log("[v0] Submetendo form tradicional para tracking...")
+      if (hiddenFormRef.current) {
+        const hiddenForm = hiddenFormRef.current
+        ;(hiddenForm.elements.namedItem("nome") as HTMLInputElement).value = formData.nome
+        ;(hiddenForm.elements.namedItem("email") as HTMLInputElement).value = formData.email
+        ;(hiddenForm.elements.namedItem("celular") as HTMLInputElement).value = formData.celular
+        ;(hiddenForm.elements.namedItem("empresa") as HTMLInputElement).value = formData.empresa
+        ;(hiddenForm.elements.namedItem("cargo") as HTMLInputElement).value = formData.cargo
+        ;(hiddenForm.elements.namedItem("faturamento") as HTMLInputElement).value = formData.faturamento
+        ;(hiddenForm.elements.namedItem("iniciativasIA") as HTMLInputElement).value = formData.iniciativasIA
+        ;(hiddenForm.elements.namedItem("bi") as HTMLInputElement).value = formData.bi
+
+        hiddenForm.submit()
+        console.log("[v0] Form tradicional submetido para tracking")
+      }
+
+      console.log("[v0] Enviando dados via fetch...")
       const response = await fetch("/api/submit-form", {
         method: "POST",
         headers: {
@@ -202,7 +222,6 @@ export function ChatInterface() {
       console.log("[v0] Formulário enviado com sucesso:", result)
 
       if (typeof window !== "undefined") {
-        // Evento genérico de conversão
         window.dispatchEvent(
           new CustomEvent("formSubmitted", {
             detail: {
@@ -213,7 +232,6 @@ export function ChatInterface() {
           }),
         )
 
-        // Tenta notificar scripts de tracking comuns
         if ((window as any).dataLayer) {
           ;(window as any).dataLayer.push({
             event: "form_submission",
@@ -223,7 +241,6 @@ export function ChatInterface() {
         }
       }
 
-      // Mostra mensagem do usuário e avança para sucesso
       addUserMessage(`${formData.nome} - ${formData.empresa}`)
       setStep("success")
       addBotMessage(
@@ -233,7 +250,6 @@ export function ChatInterface() {
     } catch (error) {
       console.error("[v0] Erro ao enviar formulário:", error)
 
-      // Mostra mensagem de erro para o usuário
       addBotMessage(
         "Ops! Tivemos um problema ao enviar seus dados. 😔\n\nPor favor, tente novamente ou entre em contato diretamente pelo WhatsApp: (00) 00000-0000",
         500,
@@ -252,6 +268,26 @@ export function ChatInterface() {
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 lg:py-12 min-h-screen flex items-center">
+      <iframe name="hidden-form-target" style={{ display: "none" }} title="Form submission target" />
+      <form
+        ref={hiddenFormRef}
+        action="/api/submit-form"
+        method="POST"
+        target="hidden-form-target"
+        style={{ display: "none" }}
+        id="diagnostico-ia-form-hidden"
+        data-form-name="Diagnóstico IA BIMachine"
+        data-form-type="lead-capture"
+      >
+        <input type="text" name="nome" />
+        <input type="email" name="email" />
+        <input type="tel" name="celular" />
+        <input type="text" name="empresa" />
+        <input type="text" name="cargo" />
+        <input type="hidden" name="faturamento" />
+        <input type="hidden" name="iniciativasIA" />
+        <input type="hidden" name="bi" />
+      </form>
       <div className="w-full bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden min-h-[600px] sm:min-h-[700px] flex flex-col border border-white/20">
         <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white p-3 sm:p-4 md:p-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10" />
