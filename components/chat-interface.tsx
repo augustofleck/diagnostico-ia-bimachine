@@ -66,7 +66,7 @@ export function ChatInterface() {
 
   useEffect(() => {
     addBotMessage(
-      "Olá! 👋 Eu sou a Ana, especialista em diagnóstico de IA da BIMachine.\n\nVi que você veio do nosso vídeo e quer descobrir onde aplicar IA com segurança e governabilidade, certo?\n\nAqui na BIMachine, desenvolvemos uma plataforma de diagnóstico e planejamento que mapeia sua operação e mostra exatamente:\n\n✓ Onde aplicar IA e Analytics\n✓ Quais processos automatizar primeiro\n✓ Qual o ROI esperado de cada caso de uso\n\nVou te fazer apenas 3 perguntas rápidas para entender o momento da sua empresa e garantir o melhor atendimento para você.\n\nLeva menos de 1 minuto. Vamos começar?",
+      "Olá! 👋 Eu sou a ADA.IA, especialista em diagnóstico de IA da BIMachine.\n\nVi que você veio do nosso vídeo e quer descobrir onde aplicar IA com segurança e governabilidade, certo?\n\nAqui na BIMachine, desenvolvemos uma plataforma de diagnóstico e planejamento que mapeia sua operação e mostra exatamente:\n\n✓ Onde aplicar IA e Analytics\n✓ Quais processos automatizar primeiro\n✓ Qual o ROI esperado de cada caso de uso\n\nVou te fazer apenas 3 perguntas rápidas para entender o momento da sua empresa e garantir o melhor atendimento para você.\n\nLeva menos de 1 minuto. Vamos começar?",
     )
 
     setTimeout(() => {
@@ -225,13 +225,15 @@ export function ChatInterface() {
             <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0">
               <div className="relative flex-shrink-0">
                 <div className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden shadow-lg">
-                  <Image src="/images/ada-avatar.png" alt="Ana" width={56} height={56} className="object-cover" />
+                  <Image src="/images/ada-avatar.png" alt="ADA.IA" width={56} height={56} className="object-cover" />
                 </div>
                 <span className="absolute bottom-0 right-0 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full border-2 border-white animate-pulse shadow-lg" />
               </div>
               <div className="min-w-0">
-                <h2 className="text-base sm:text-lg md:text-xl font-bold tracking-tight truncate">Ana</h2>
-                <p className="text-xs sm:text-sm text-blue-100 font-medium truncate">Especialista em IA e Analyics • Online</p>
+                <h2 className="text-base sm:text-lg md:text-xl font-bold tracking-tight truncate">ADA.IA</h2>
+                <p className="text-xs sm:text-sm text-blue-100 font-medium truncate">
+                  Especialista em IA e Analyics • Online
+                </p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-1.5 sm:gap-2 flex-shrink-0">
@@ -275,7 +277,13 @@ export function ChatInterface() {
                 <div className="flex-shrink-0">
                   {message.type === "bot" ? (
                     <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-full overflow-hidden shadow-md transition-transform hover:scale-110">
-                      <Image src="/images/ada-avatar.png" alt="Ana" width={44} height={44} className="object-cover" />
+                      <Image
+                        src="/images/ada-avatar.png"
+                        alt="ADA.IA"
+                        width={44}
+                        height={44}
+                        className="object-cover"
+                      />
                     </div>
                   ) : (
                     <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center shadow-md transition-transform hover:scale-110">
@@ -311,7 +319,7 @@ export function ChatInterface() {
             <div className="flex justify-start animate-fade-in">
               <div className="flex gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 rounded-full overflow-hidden shadow-md">
-                  <Image src="/images/ada-avatar.png" alt="Ana" width={44} height={44} className="object-cover" />
+                  <Image src="/images/ada-avatar.png" alt="ADA.IA" width={44} height={44} className="object-cover" />
                 </div>
                 <div className="bg-white rounded-xl sm:rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-lg border border-gray-100">
                   <div className="flex gap-1.5">
