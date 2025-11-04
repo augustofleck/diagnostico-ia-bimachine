@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import { User, Check, CheckCheck, ExternalLink } from "lucide-react"
+import { User, Check, CheckCheck, ExternalLink, AlertCircle } from "lucide-react"
 import Image from "next/image"
 import type { JSX } from "react/jsx-runtime"
 
@@ -17,6 +17,14 @@ interface FormData {
   email: string
   empresa: string
   cargo: string
+}
+
+interface FormErrors {
+  nome?: string
+  email?: string
+  celular?: string
+  empresa?: string
+  cargo?: string
 }
 
 interface Message {
@@ -39,6 +47,7 @@ export function ChatInterface() {
     empresa: "",
     cargo: "",
   })
+  const [formErrors, setFormErrors] = useState<FormErrors>({})
   const [isTyping, setIsTyping] = useState(false)
   const [showingMessageIndex, setShowingMessageIndex] = useState(-1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -125,7 +134,7 @@ export function ChatInterface() {
       )
     } else {
       addBotMessage(
-        "Entendi! Vamos focar em casos de uso com ROI mais rápido e implementação simplificada. 😊\n\nAgora me conta: sua empresa já tem alguma iniciativa de Inteligência Artificial em andamento?\n\n(Pode ser piloto, testes, ferramentas com IA, chatbots, etc.)",
+        "Entendi! Vamos focar em casos de uso com ROI mais rápido e implementação simplificada. 😊\n\nÚltima pergunta: sua empresa já tem uma ferramenta de BI ou Analytics implementada?\n\n(Dashboards, relatórios automatizados, plataformas de dados, etc.)",
         1200,
       )
     }
@@ -179,31 +188,119 @@ export function ChatInterface() {
     }, 1300)
   }
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const validatePhone = (phone: string): boolean => {
+    const cleanPhone = phone.replace(/\D/g, "")
+    return cleanPhone.length >= 10 && cleanPhone.length <= 11
+  }
+
+  const validateName = (name: string): boolean => {
+    const nameRegex = /^[a-zA-ZÀ-ÿ\s]{2,}$/
+    return nameRegex.test(name.trim())
+  }
+
+  const validateCompany = (company: string): boolean => {
+    return company.trim().length >= 2
+  }
+
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {}
+
+    if (!validateName(formData.nome)) {
+      errors.nome = "Nome deve conter apenas letras e ter pelo menos 2 caracteres"
+    }
+
+    if (!validateEmail(formData.email)) {
+      errors.email = "E-mail inválido. Use o formato: seu@empresa.com"
+    }
+
+    if (!validatePhone(formData.celular)) {
+      errors.celular = "Telefone inválido. Digite um número válido com DDD"
+    }
+
+    if (!validateCompany(formData.empresa)) {
+      errors.empresa = "Nome da empresa deve ter pelo menos 2 caracteres"
+    }
+
+    if (!formData.cargo) {
+      errors.cargo = "Selecione seu cargo/função"
+    }
+
+    setFormErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value,
+    })
+
+    if (formErrors[name as keyof FormErrors]) {
+      setFormErrors({
+        ...formErrors,
+        [name]: undefined,
+      })
+    }
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, "")
+
+    if (value.length <= 11) {
+      if (value.length <= 2) {
+        value = value
+      } else if (value.length <= 6) {
+        value = `(${value.slice(0, 2)}) ${value.slice(2)}`
+      } else if (value.length <= 10) {
+        value = `(${value.slice(0, 2)}) ${value.slice(2, 6)}-${value.slice(6)}`
+      } else {
+        value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`
+      }
+    }
+
+    setFormData({
+      ...formData,
+      celular: value,
+    })
+
+    if (formErrors.celular) {
+      setFormErrors({
+        ...formErrors,
+        celular: undefined,
+      })
+    }
+  }
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!validateForm()) {
+      console.log("[v0] Formulário contém erros de validação:", formErrors)
+      return
+    }
 
     console.log("[v0] Iniciando submissão do formulário")
     console.log("[v0] Valores do formData:", formData)
 
     if (mainFormRef.current) {
-      const hiddenInputs = mainFormRef.current.querySelectorAll('input[type="hidden"]')
-      hiddenInputs.forEach((input) => {
-        const htmlInput = input as HTMLInputElement
-        if (htmlInput.name === "c_faturamento") {
-          htmlInput.value = formData.faturamento
-          console.log("[v0] Definindo c_faturamento:", formData.faturamento)
-        } else if (htmlInput.name === "c_iniciativas_ia") {
-          htmlInput.value = formData.iniciativasIA
-          console.log("[v0] Definindo c_iniciativas_ia:", formData.iniciativasIA)
-        } else if (htmlInput.name === "c_bi_analytics") {
-          htmlInput.value = formData.bi
-          console.log("[v0] Definindo c_bi_analytics:", formData.bi)
-        } else if (htmlInput.name === "c_diagnostico_completo") {
-          const diagnostico = `Faturamento >200k: ${formData.faturamento === "sim" ? "Sim" : "Não"} | Iniciativas IA: ${formData.iniciativasIA === "sim" ? "Sim" : "Não"} | BI/Analytics: ${formData.bi === "sim" ? "Sim" : "Não"}`
-          htmlInput.value = diagnostico
-          console.log("[v0] Definindo c_diagnostico_completo:", diagnostico)
-        }
-      })
+      const personalNoteInput = mainFormRef.current.querySelector('input[name="personal_note"]') as HTMLInputElement
+      if (personalNoteInput) {
+        const diagnostico = `DIAGNÓSTICO DE IA - BIMachine
+
+📊 Faturamento mensal superior a R$ 200 mil: ${formData.faturamento === "sim" ? "Sim" : "Não"}
+🤖 Já possui iniciativas de IA em andamento: ${formData.iniciativasIA === "sim" ? "Sim" : "Não"}
+📈 Possui ferramenta de BI/Analytics implementada: ${formData.bi === "sim" ? "Sim" : "Não"}
+
+Origem: Diagnóstico IA - Chat Interativo`
+        personalNoteInput.value = diagnostico
+        console.log("[v0] Definindo personal_note com diagnóstico formatado:", diagnostico)
+      }
 
       const formDataObj = new FormData(mainFormRef.current)
       console.log("[v0] Dados que serão enviados:")
@@ -226,13 +323,6 @@ export function ChatInterface() {
       )
       setIsSubmitting(false)
     }, 2000)
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
   }
 
   return (
@@ -377,6 +467,7 @@ export function ChatInterface() {
             data-form-name="Diagnóstico IA BIMachine"
             data-form-type="lead-capture"
             data-rd-form="true"
+            noValidate
           >
             <div className="text-center mb-3 sm:mb-4">
               <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 leading-snug">
@@ -384,17 +475,9 @@ export function ChatInterface() {
               </h3>
             </div>
 
-            <input type="hidden" name="traffic_source" value="Diagnostico IA" />
-            <input type="hidden" name="identificador" value="Diagnostico IA" />
-
-            <input type="hidden" name="c_faturamento" value={formData.faturamento} />
-            <input type="hidden" name="c_iniciativas_ia" value={formData.iniciativasIA} />
-            <input type="hidden" name="c_bi_analytics" value={formData.bi} />
-            <input
-              type="hidden"
-              name="c_diagnostico_completo"
-              value={`Faturamento >200k: ${formData.faturamento === "sim" ? "Sim" : "Não"} | Iniciativas IA: ${formData.iniciativasIA === "sim" ? "Sim" : "Não"} | BI/Analytics: ${formData.bi === "sim" ? "Sim" : "Não"}`}
-            />
+            <input type="hidden" name="traffic_source" value="Diagnóstico IA" />
+            <input type="hidden" name="identificador" value="Diagnóstico IA" />
+            <input type="hidden" name="personal_note" value="" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
               <div className="sm:col-span-2">
@@ -408,9 +491,19 @@ export function ChatInterface() {
                   value={formData.nome}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  minLength={2}
+                  pattern="[a-zA-ZÀ-ÿ\s]+"
+                  className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white ${
+                    formErrors.nome ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="Seu nome completo"
                 />
+                {formErrors.nome && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{formErrors.nome}</span>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -424,9 +517,17 @@ export function ChatInterface() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white ${
+                    formErrors.email ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="seu@empresa.com"
                 />
+                {formErrors.email && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{formErrors.email}</span>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -438,11 +539,20 @@ export function ChatInterface() {
                   id="celular-input"
                   name="celular"
                   value={formData.celular}
-                  onChange={handleInputChange}
+                  onChange={handlePhoneChange}
                   required
-                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  maxLength={15}
+                  className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white ${
+                    formErrors.celular ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="(00) 00000-0000"
                 />
+                {formErrors.celular && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{formErrors.celular}</span>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -456,9 +566,18 @@ export function ChatInterface() {
                   value={formData.empresa}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  minLength={2}
+                  className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white ${
+                    formErrors.empresa ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="Nome da empresa"
                 />
+                {formErrors.empresa && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{formErrors.empresa}</span>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -471,7 +590,9 @@ export function ChatInterface() {
                   value={formData.cargo}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white"
+                  className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium shadow-sm hover:border-gray-400 bg-white ${
+                    formErrors.cargo ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Selecione...</option>
                   <option value="diretor">Diretor(a)</option>
@@ -481,6 +602,12 @@ export function ChatInterface() {
                   <option value="socio">Sócio/Proprietário(a)</option>
                   <option value="outro">Outro</option>
                 </select>
+                {formErrors.cargo && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{formErrors.cargo}</span>
+                  </div>
+                )}
               </div>
             </div>
 
