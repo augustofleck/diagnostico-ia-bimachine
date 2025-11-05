@@ -479,6 +479,18 @@ Origem: Diagnóstico IA - Chat Interativo`
             <input type="hidden" name="identificador" value="Diagnóstico IA" />
             <input type="hidden" name="personal_note" value="" />
 
+            <input
+              type="hidden"
+              name="faturamento_mensal_maior_200k"
+              value={formData.faturamento === "sim" ? "SIM" : "NAO"}
+            />
+            <input
+              type="hidden"
+              name="possui_iniciativas_ia"
+              value={formData.iniciativasIA === "sim" ? "SIM" : "NAO"}
+            />
+            <input type="hidden" name="possui_ferramenta_bi_analytics" value={formData.bi === "sim" ? "SIM" : "NAO"} />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
               <div className="sm:col-span-2">
                 <label htmlFor="nome-input" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
