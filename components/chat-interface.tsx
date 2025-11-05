@@ -712,8 +712,6 @@ Origem: Diagnóstico IA - Chat Interativo`
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <a
                   href="https://www.bimachine.com.br"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation"
                 >
                   Nosso Site
@@ -721,8 +719,6 @@ Origem: Diagnóstico IA - Chat Interativo`
                 </a>
                 <a
                   href="https://register.bimachine.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-5 py-3.5 sm:px-6 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg hover:from-purple-700 hover:to-purple-800 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 touch-manipulation"
                 >
                   Teste nossa solução analytics grátis
