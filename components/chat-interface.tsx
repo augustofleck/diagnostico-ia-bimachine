@@ -123,7 +123,8 @@ export function ChatInterface() {
   }
 
   const handleQuestion1Answer = (answer: "sim" | "nao") => {
-    const answerText = answer === "sim" ? "✓ Sim, temos" : "✗ Não temos"
+    const answerText =
+      answer === "sim" ? "Sim, nosso faturamento é superior a R$ 200 mil" : "Não, ainda não chegamos nesse faturamento"
     addUserMessage(answerText)
     setFormData({ ...formData, faturamento: answer })
 
@@ -145,7 +146,7 @@ export function ChatInterface() {
   }
 
   const handleQuestion2Answer = (answer: "sim" | "nao") => {
-    const answerText = answer === "sim" ? "✓ Sim, já temos" : "✗ Ainda não"
+    const answerText = answer === "sim" ? "Sim, já temos iniciativas de IA rodando" : "Não, ainda estamos avaliando"
     addUserMessage(answerText)
     setFormData({ ...formData, iniciativasIA: answer })
 
@@ -167,7 +168,7 @@ export function ChatInterface() {
   }
 
   const handleQuestion3Answer = (answer: "sim" | "nao") => {
-    const answerText = answer === "sim" ? "✓ Sim, temos BI" : "✗ Não temos"
+    const answerText = answer === "sim" ? "Sim, já temos BI implementado" : "Não, ainda não temos essa estrutura"
     addUserMessage(answerText)
     setFormData({ ...formData, bi: answer })
 
