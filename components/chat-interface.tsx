@@ -354,14 +354,16 @@ Origem: Diagnóstico IA - Chat Interativo`
                 alt="BIMachine"
                 width={100}
                 height={32}
-                className="h-5 sm:h-6 md:h-7 w-auto opacity-90"
+                className="h-5 sm:h-6 md:h-7 opacity-90"
+                style={{ width: "auto" }}
               />
               <Image
                 src="/images/iamachine-logo.png"
                 alt="iAMachine"
                 width={80}
                 height={32}
-                className="h-4 sm:h-5 md:h-6 w-auto opacity-90"
+                className="h-4 sm:h-5 md:h-6 opacity-90"
+                style={{ width: "auto" }}
               />
             </div>
           </div>
